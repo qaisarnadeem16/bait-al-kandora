@@ -122,6 +122,100 @@ const FooterDesktop = () => {
 	}, [visibleEventMessages]);
 
 	// Handle the "Add to Cart" button click event
+	// const handleAddToCart = () => {
+	// 	// Check if the product has mandatory personalization data and the value is less than 1
+	// 	if (isMandatoryPD && pdValue < 1) {
+	// 		setIsPDStartedFromCart(true);
+	// 		tryOnRef?.current?.setVisible?.(true);
+	// 		tryOnRef?.current?.changeMode?.(TryOnMode.PDTool);
+	// 		setTryOnMode(TryOnMode.PDTool);
+	// 		return;
+	// 	}
+	// 	// if you're saving a draft composition in backoffice
+	// 	if (isDraftEditor) {
+	// 		setIsSavingComposition(true);
+	// 		saveComposition().then(() => {
+	// 			setIsSavingComposition(false);
+	// 			showDialog(
+	// 				'WelcomeMessage',
+	// 				<MessageDialog alignButtons='center' message={T._('Composition saved successfully', 'Composer')} />
+	// 			);
+	// 		});
+	// 	}
+	// 	// Check if there is a cart message visible and show a confirmation dialog
+	// 	const cartMessage = eventMessages?.find((message) => message.eventID === 4);
+	// 	if (cartMessage && cartMessage.visible && !isDraftEditor && !isEditorMode)
+	// 		showDialog(
+	// 			'question',
+	// 			<QuestionDialog
+	// 				alignButtons='center'
+	// 				eventMessage={cartMessage?.description}
+	// 				buttonNoLabel={T._('Cancel', 'Composer')}
+	// 				buttonYesLabel={T._('Add to cart', 'Composer')}
+	// 				onYesClick={() => {
+	// 					// Check if NFT is enabled and show the NFT dialog
+	// 					if (nftSettings && nftSettings.isNFTEnabled && !isDraftEditor)
+	// 						showDialog(
+	// 							'nft',
+	// 							<NftDialog
+	// 								nftTitle={T._(
+	// 									"You're purchasing a customized product together with an NFT.",
+	// 									'Composer'
+	// 								)}
+	// 								nftMessage={T._(
+	// 									'To confirm and mint your NFT you need an active wallet compatible with Ethereum. Confirm and add your email and wallet address.',
+	// 									'Composer'
+	// 								)}
+	// 								price={nftSettings.priceToAdd + price}
+	// 								buttonNoLabel={T._('Skip and continue', 'Composer')}
+	// 								buttonYesLabel={T._('Confirm and Purchase', 'Composer')}
+	// 								onYesClick={(nftForm: NftForm) => {
+	// 									closeDialog('nft');
+	// 									addToCart([], undefined, useLegacyScreenshot, nftForm);
+	// 								}}
+	// 								onNoClick={() => {
+	// 									closeDialog('nft');
+	// 									addToCart([], undefined, useLegacyScreenshot);
+	// 								}}
+	// 							/>
+	// 						);
+	// 					else addToCart([], undefined, useLegacyScreenshot);
+	// 					closeDialog('question');
+	// 				}}
+	// 			/>
+	// 		);
+	// 	// If NFT is enabled, show the NFT dialog
+	// 	else if (nftSettings && nftSettings.isNFTEnabled && !isDraftEditor)
+	// 		showDialog(
+	// 			'nft',
+	// 			<NftDialog
+	// 				nftTitle={T._("You're purchasing a customized product together with an NFT.", 'Composer')}
+	// 				nftMessage={T._(
+	// 					'To confirm and mint your NFT you need an active wallet compatible with Ethereum. Confirm and add your email and wallet address.',
+	// 					'Composer'
+	// 				)}
+	// 				price={nftSettings.priceToAdd + price}
+	// 				buttonNoLabel={T._('Skip and continue', 'Composer')}
+	// 				buttonYesLabel={T._('Confirm and Purchase', 'Composer')}
+	// 				onYesClick={(nftForm: NftForm) => {
+	// 					closeDialog('nft');
+	// 					addToCart([], undefined, useLegacyScreenshot, nftForm);
+	// 				}}
+	// 				onNoClick={() => {
+	// 					closeDialog('nft');
+	// 					addToCart([], undefined, useLegacyScreenshot);
+	// 				}}
+	// 			/>
+	// 		);
+	// 	else {
+	// 		if (measurementData) {
+	// 			(window as any).Zakeke.addToCart({ additionalProperties: measurementData });
+	// 		} else {
+	// 			addToCart([], undefined, useLegacyScreenshot);
+	// 		}
+	// 	}
+	// };
+
 	const handleAddToCart = () => {
 		// Check if the product has mandatory personalization data and the value is less than 1
 		if (isMandatoryPD && pdValue < 1) {
@@ -179,7 +273,7 @@ const FooterDesktop = () => {
 									}}
 								/>
 							);
-						else addToCart([], undefined, useLegacyScreenshot);
+						else addToCart({ additionalProperties: measurementData },  undefined, useLegacyScreenshot);
 						closeDialog('question');
 					}}
 				/>
@@ -199,20 +293,16 @@ const FooterDesktop = () => {
 					buttonYesLabel={T._('Confirm and Purchase', 'Composer')}
 					onYesClick={(nftForm: NftForm) => {
 						closeDialog('nft');
-						addToCart([], undefined, useLegacyScreenshot, nftForm);
+						addToCart({ additionalProperties: measurementData }, undefined, useLegacyScreenshot, nftForm);
 					}}
 					onNoClick={() => {
 						closeDialog('nft');
-						addToCart([], undefined, useLegacyScreenshot);
+						addToCart({ additionalProperties: measurementData }, undefined, useLegacyScreenshot);
 					}}
 				/>
 			);
 		else {
-			if (measurementData) {
-				(window as any).Zakeke.addToCart({ additionalProperties: measurementData });
-			} else {
-				addToCart([], undefined, useLegacyScreenshot);
-			}
+			addToCart({ additionalProperties: measurementData }, undefined, useLegacyScreenshot);
 		}
 	};
 
