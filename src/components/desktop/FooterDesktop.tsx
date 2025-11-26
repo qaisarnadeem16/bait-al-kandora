@@ -273,7 +273,7 @@ const FooterDesktop = () => {
 									}}
 								/>
 							);
-						else addToCart({ additionalProperties: measurementData },  undefined, useLegacyScreenshot);
+						else addToCart(measurementData || [], undefined, useLegacyScreenshot);
 						closeDialog('question');
 					}}
 				/>
@@ -293,16 +293,16 @@ const FooterDesktop = () => {
 					buttonYesLabel={T._('Confirm and Purchase', 'Composer')}
 					onYesClick={(nftForm: NftForm) => {
 						closeDialog('nft');
-						addToCart({ additionalProperties: measurementData }, undefined, useLegacyScreenshot, nftForm);
+						addToCart(measurementData || [], undefined, useLegacyScreenshot, nftForm);
 					}}
 					onNoClick={() => {
 						closeDialog('nft');
-						addToCart({ additionalProperties: measurementData }, undefined, useLegacyScreenshot);
+						addToCart(measurementData || [], undefined, useLegacyScreenshot);
 					}}
 				/>
 			);
 		else {
-			addToCart({ additionalProperties: measurementData }, undefined, useLegacyScreenshot);
+			addToCart(measurementData || [], undefined, useLegacyScreenshot);
 		}
 	};
 
