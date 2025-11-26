@@ -1,0 +1,86 @@
+/* measurement.css - Styles for the custom measurement UI */
+
+.measurement-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.measurement-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.measurement-field label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+
+.measurement-field label .tooltip {
+  margin-left: 4px;
+  cursor: help;
+  color: #666;
+}
+
+.measurement-field input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.measurement-field input.error {
+  border-color: #e53935;
+}
+
+.error-message {
+  color: #e53935;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.custom-size-button {
+  background: transparent;
+  border: 2px solid #0070f3;
+  color: #0070f3;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+
+.custom-size-button:hover {
+  background: #0070f3;
+  color: #fff;
+}
+
+.size-dropdown {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.personalize-button {
+  background: #ff4081;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.personalize-button:hover {
+  background: #e91e63;
+}
+
+@media (max-width: 768px) {
+  .measurement-form {
+    grid-template-columns: 1fr;
+  }
+}

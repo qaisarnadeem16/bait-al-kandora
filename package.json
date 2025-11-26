@@ -1,0 +1,71 @@
+{
+	"name": "zakeke-configurator-default-theme",
+	"version": "0.1.0",
+	"private": true,
+	"homepage": ".",
+	"dependencies": {
+		"@testing-library/react": "^14.1.2",
+		"@zakeke/zakeke-configurator-react": "npm:zakeke-configurator-react@0.1.313",
+		"ajv": "^8.14.0",
+		"immutability-helper": "^3.1.1",
+		"immutable": "^4.3.4",
+		"lodash": "^4.17.21",
+		"nuka-carousel": "^5.4.0",
+		"openai": "^3.2.1",
+		"polished": "^4.2.2",
+		"qrcode.react": "^3.1.0",
+		"react": "^18",
+		"react-color": "^2.19.3",
+		"react-colorful": "^5.6.1",
+		"react-dom": "^18",
+		"react-loader-spinner": "^6.1.0",
+		"react-scripts": "5.0.1",
+		"react-select": "^5.8.0",
+		"react-tippy": "^1.4.0",
+		"styled-components": "^6.1.1",
+		"typescript": "^4",
+		"zustand": "^4.4.7"
+	},
+	"scripts": {
+		"copy": "cpy node_modules/@zakeke/zakeke-configurator-react/dist/globals*.js public/",
+		"start": "npm run copy && react-scripts start",
+		"build": "npm run copy && react-scripts build",
+		"test": "npm run copy && react-scripts test",
+		"eject": "npm run copy && react-scripts eject"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"devDependencies": {
+		"@babel/core": "^7.23.6",
+		"@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+		"@babel/preset-env": "^7.23.6",
+		"@testing-library/jest-dom": "^6.1.5",
+		"@types/jest": "^29.5.11",
+		"@types/lodash": "^4.14.202",
+		"@types/node": "^20.10.4",
+		"@types/nuka-carousel": "^4.4.6",
+		"@types/qrcode.react": "^1.0.5",
+		"@types/react": "^18",
+		"@types/react-color": "^3.0.10",
+		"@types/react-dom": "^18",
+		"@types/react-loader-spinner": "^4.0.0",
+		"@types/styled-components": "^5.1.34",
+		"cpy-cli": "^5.0.0"
+	}
+}

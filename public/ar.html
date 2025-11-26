@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+		<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+		<!-- Babylon JS -->
+		<script src="https://test-portal.zakeke.com/Scripts/libs/babylonjs/5.0.0-alpha.57/babylon.max.js"></script>
+		<script src="https://test-portal.zakeke.com/Scripts/libs/babylonjs/5.0.0-alpha.57/babylonjs.loaders.js"></script>
+		<script src="https://test-portal.zakeke.com/Scripts/libs/babylonjs/5.0.0-alpha.57/babylonjs.materials.js"></script>
+		<script src="https://test-portal.zakeke.com/Scripts/libs/babylonjs/5.0.0-alpha.57/babylon.glTF2Serializer.js"></script>
+		<script src="https://test-portal.zakeke.com/Scripts/libs/babylonjs/5.0.0-alpha.57/babylon.objSerializer.js"></script>
+		<script src="https://test-portal.zakeke.com/Scripts/libs/babylonjs/5.0.0-alpha.57/babylon.gui.js"></script>
+
+		<!-- Page script -->
+		<script src="https://test-portal.zakeke.com/Scripts/3D/dist/Zakeke3D.js"></script>
+		<script src="https://test-portal.zakeke.com/Scripts/onflyAR/onflyAR.js"></script>
+
+		<style>
+			:host,
+			model-viewer {
+				width: 100% !important;
+				height: 100% !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<model-viewer
+			id="model-viewer"
+			src="blob:https://test-portal.zakeke.com/607980a2-f387-4136-9f96-8600bc3ae760"
+			ar=""
+			ar-modes="webxr"
+			camera-controls=""
+			alt="A 3D model"
+			skybox-image=""
+			ar-status="not-presenting"
+		>
+		</model-viewer>
+
+<body>
+    <model-viewer id="model-viewer" src="blob:https://test-portal.zakeke.com/607980a2-f387-4136-9f96-8600bc3ae760" ar="ar" ar-modes="webxr" camera-controls="" alt="A 3D model" skybox-image="" ar-status="not-presenting" ar-placement="">
+    </model-viewer>
+
+    <script>
+    </script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const arAnchor = params.get('arAnchor');
+
+        window["onflyAR"].modelToDataUrl().then(url => {
+            document.querySelector("#model-viewer").setAttribute('ar-placement', arAnchor ?? 'floor');
+            document.querySelector("#model-viewer").setAttribute('src', url);
+        });
+    </script>
+
+</body></html>
