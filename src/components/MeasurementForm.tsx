@@ -1,77 +1,44 @@
 import React, { useState } from 'react';
-import './measurement.css';
+import '../styles/measurement.css';
 import useStore from '../Store';
 import { useDialogManager } from './dialogs/Dialogs';
 
-// Define the list of measurement fields
-const measurementFields = [
-    { name: 'Bust', required: true },
-    { name: 'Underbust', required: false },
-    { name: 'Waist', required: true },
-    { name: 'Length Bust X', required: false },
-    { name: 'Length Bust Y', required: false },
-    { name: 'Small Hip', required: false },
-    { name: 'Large Hip', required: true },
-    { name: 'Arm', required: false },
-    { name: 'Wrist', required: false },
-    { name: 'Shoulders Width', required: false },
-    { name: 'Sleeve Length', required: false },
-    { name: 'Skirt Length', required: true },
-];
+type MeasurementType = 'kandora' | 'body';
+type FittingType = 'slim' | 'regular' | 'loose';
+type NeckLengthType = 'A' | 'K';
+type ShoulderLineType = 'regular' | 'sloping' | 'square';
 
-// Helper to generate tooltip content (placeholder)
-const getTooltip = (fieldName: string) => {
-    return `Enter the ${fieldName.toLowerCase()} measurement in centimeters.`;
-};
-
-const standardSizes = [32, 34, 36, 38, 40, 42];
+interface MeasurementValues {
+    [key: string]: string;
+}
 
 const MeasurementForm: React.FC = () => {
-    const { measurementFormState, setMeasurementFormState, setMeasurementData } = useStore();
-    const { closeDialog } = useDialogManager();
-
-    const { selectedSize, showCustom, values } = measurementFormState;
+    const [measurementType, setMeasurementType] = useState<MeasurementType>('kandora');
+    const [values, setValues] = useState<MeasurementValues>({});
+    const [fitting, setFitting] = useState<FittingType>('regular');
+    const [neckType, setNeckType] = useState<NeckLengthType>('A');
+    const [lengthType, setLengthType] = useState<NeckLengthType>('A');
+    const [shoulderLine, setShoulderLine] = useState<ShoulderLineType>('regular');
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const updateState = (updates: Partial<typeof measurementFormState>) => {
-        setMeasurementFormState({ ...measurementFormState, ...updates });
-    };
-
-    const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        updateState({
-            selectedSize: e.target.value,
-            showCustom: false,
-            values: {}
-        });
-        setErrors({});
-    };
-
-    const toggleCustom = () => {
-        updateState({
-            showCustom: !showCustom,
-            selectedSize: '',
-            values: {}
-        });
-        setErrors({});
-    };
+    const { setMeasurementData } = useStore();
+    const { closeDialog } = useDialogManager();
 
     const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
-        updateState({
-            values: { ...values, [field]: val }
-        });
-        // Clear error on change
-        setErrors((prev) => ({ ...prev, [field]: '' }));
+        setValues((prev) => ({ ...prev, [field]: val }));
+        if (errors[field]) {
+            setErrors((prev) => ({ ...prev, [field]: '' }));
+        }
     };
 
-    const validate = (): boolean => {
+    const validate = (fields: string[]): boolean => {
         const newErrors: Record<string, string> = {};
-        measurementFields.forEach(({ name, required }) => {
-            const val = values[name] ?? '';
-            if (required && !val) {
-                newErrors[name] = 'This field is required';
-            } else if (val && isNaN(Number(val))) {
-                newErrors[name] = 'Only numeric values are allowed';
+        fields.forEach((field) => {
+            if (!values[field]) {
+                newErrors[field] = 'Required';
+            } else if (isNaN(Number(values[field]))) {
+                newErrors[field] = 'Number only';
             }
         });
         setErrors(newErrors);
@@ -79,85 +46,172 @@ const MeasurementForm: React.FC = () => {
     };
 
     const handlePersonalize = () => {
-        if (showCustom && !validate()) return;
+        const kandoraFields = [
+            'Neck',
+            'Shoulder',
+            'Chest',
+            'Front Cross',
+            'Waist',
+            'Sleeve Left',
+            'Sleeve Right',
+            'Arm Hole',
+            'Bicep',
+            'Wrist',
+            'Base Width',
+            'Border',
+            'Length'
+        ];
 
-        // Build measurement data object, include only fields that have a value
-        const measurementData: Record<string, string> = {};
+        const bodyFields = [
+            'Neck',
+            'Shoulder',
+            'Chest',
+            'Waist',
+            'Sleeve',
+            'Wrist',
+            'Length'
+        ];
 
-        if (showCustom) {
-            Object.entries(values).forEach(([key, val]) => {
-                if (val) measurementData[key] = val;
-            });
-        }
+        const fields = measurementType === 'kandora' ? kandoraFields : bodyFields;
 
-        // Add size if a standard size was selected
-        if (selectedSize) {
-            measurementData['StandardSize'] = selectedSize;
-        }
+        if (!validate(fields)) return;
 
-        // If no size and no custom measurements, maybe show error?
-        // Assuming at least one is required.
-        if (!selectedSize && (!showCustom || Object.keys(measurementData).length === 0)) {
-            // If custom is shown but empty, validate() would catch it if fields are required.
-            // If custom is NOT shown and no size selected:
-            if (!showCustom && !selectedSize) {
-                alert("Please select a size or enter custom measurements.");
-                return;
-            }
-        }
+        const data: Record<string, string> = {
+            MeasurementType: measurementType === 'kandora' ? 'Kandora Measurement' : 'Body Measurement',
+            Fitting: fitting.charAt(0).toUpperCase() + fitting.slice(1) + ' Fit',
+            NeckType: neckType === 'A' ? 'Arabic' : 'Kuwaiti',
+            LengthType: lengthType === 'A' ? 'Arabic' : 'Kuwaiti',
+            ShoulderLine: shoulderLine.charAt(0).toUpperCase() + shoulderLine.slice(1),
+            ...values
+        };
 
-        setMeasurementData(measurementData);
+        setMeasurementData(data);
         closeDialog('measurement-modal');
     };
 
-    const handleClose = () => {
-        closeDialog('measurement-modal');
-    };
+    const renderField = (label: string, field: string, special?: 'neck' | 'length', fullWidth?: boolean) => (
+        <div className={`measurement-grid-item ${fullWidth ? 'full-width' : ''}`} key={field}>
+            <label className="measurement-label">{label}</label>
+            <div className="input-wrapper">
+                {(special === 'neck' || special === 'length') && (
+                    <div className="radio-group-inline">
+                        <label className={`radio-pill ${(special === 'neck' ? neckType : lengthType) === 'A' ? 'active' : ''}`}>
+                            <input
+                                type="radio"
+                                name={`${field}Type`}
+                                checked={(special === 'neck' ? neckType : lengthType) === 'A'}
+                                onChange={() => special === 'neck' ? setNeckType('A') : setLengthType('A')}
+                            /> A (Arabic)
+                        </label>
+                        <label className={`radio-pill ${(special === 'neck' ? neckType : lengthType) === 'K' ? 'active' : ''}`}>
+                            <input
+                                type="radio"
+                                name={`${field}Type`}
+                                checked={(special === 'neck' ? neckType : lengthType) === 'K'}
+                                onChange={() => special === 'neck' ? setNeckType('K') : setLengthType('K')}
+                            /> K (Kuwaiti)
+                        </label>
+                    </div>
+                )}
+                <input
+                    type="text"
+                    className={`measurement-input ${errors[field] ? 'error' : ''}`}
+                    value={values[field] || ''}
+                    onChange={handleInputChange(field)}
+                    placeholder="0.00 CM"
+                />
+                {errors[field] && <div className="error-text">{errors[field]}</div>}
+            </div>
+        </div>
+    );
 
     return (
-        <div className="measurement-form-container">
-            <button type="button" className="close-button" onClick={handleClose} aria-label="Close">
-                &times;
-            </button>
-            <label htmlFor="size-dropdown">Select Size:</label>
-            <select
-                id="size-dropdown"
-                className="size-dropdown"
-                value={selectedSize}
-                onChange={handleSizeChange}
-                disabled={showCustom}
-            >
-                <option value="">-- Choose --</option>
-                {standardSizes.map((size) => (
-                    <option key={size} value={size.toString()}>{size}</option>
-                ))}
-            </select>
-            <button type="button" className="custom-size-button" onClick={toggleCustom}>
-                {showCustom ? 'Cancel Custom Size' : 'Custom Size'}
-            </button>
+        <div className="measurement-container">
+            <div className="measurement-header">
+                <h2>{measurementType === 'kandora' ? 'Kandora' : 'Body'} Measurements</h2>
+                <div className="measurement-tabs-pill">
+                    <button
+                        className={`pill-tab ${measurementType === 'kandora' ? 'active' : ''}`}
+                        onClick={() => setMeasurementType('kandora')}
+                    >
+                        Kandora
+                    </button>
+                    <button
+                        className={`pill-tab ${measurementType === 'body' ? 'active' : ''}`}
+                        onClick={() => setMeasurementType('body')}
+                    >
+                        Body
+                    </button>
+                </div>
+            </div>
+            <div className=" half-width">
+                <div className=" dropdown">
+                    <label className="measurement-label">Fitting Option</label>
+                    <select
+                        className="measurement-select"
+                        value={fitting}
+                        onChange={(e) => setFitting(e.target.value as FittingType)}
+                    >
+                        <option value="regular">Regular Fit</option>
+                        <option value="slim">Slim Fit</option>
+                        <option value="loose">Loose Fit</option>
+                    </select>
+                </div>
 
-            {showCustom && (
-                <form className="measurement-form" onSubmit={(e) => { e.preventDefault(); handlePersonalize(); }}>
-                    {measurementFields.map(({ name, required }) => (
-                        <div key={name} className="measurement-field">
-                            <label>
-                                {name}{required && ' *'}
-                                <span className="tooltip" title={getTooltip(name)}>ⓘ</span>
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Size in CM"
-                                value={values[name] ?? ''}
-                                onChange={handleInputChange(name)}
-                                className={errors[name] ? 'error' : ''}
-                            />
-                            {errors[name] && <div className="error-message">{errors[name]}</div>}
-                        </div>
-                    ))}
-                </form>
-            )}
+                <div className="dropdown">
+                    <label className="measurement-label">Shoulder Down</label>
+                    <select
+                        className="measurement-select"
+                        value={shoulderLine}
+                        onChange={(e) => setShoulderLine(e.target.value as ShoulderLineType)}
+                    >
+                        <option value="regular">Regular</option>
+                        <option value="sloping">Sloping</option>
+                        <option value="square">Square</option>
+                    </select>
+                </div>
+            </div>
 
-            <button type="button" className="personalize-button" onClick={handlePersonalize}>Add Measurements</button>
+            <div className=" half-width">
+                <div className="dropdown">
+                    {renderField('Neck', 'Neck', 'neck', true)}
+                </div>
+                <div className="dropdown">
+                    {renderField('Length', 'Length', 'length', true)}
+                </div>
+
+            </div>
+            <div className="measurement-grid">
+                {/* Global Options Row */}
+
+
+                {/* Measurement Fields */}
+                {renderField('Shoulder', 'Shoulder')}
+                {renderField('Chest', 'Chest')}
+                {measurementType === 'kandora' && renderField('Front Cross', 'Front Cross')}
+                {renderField('Waist', 'Waist')}
+
+                {measurementType === 'kandora' ? (
+                    <>
+                        {renderField('Sleeve Left', 'Sleeve Left')}
+                        {renderField('Sleeve Right', 'Sleeve Right')}
+                    </>
+                ) : (
+                    renderField('Sleeve', 'Sleeve')
+                )}
+
+                {measurementType === 'kandora' && renderField('Arm Hole', 'Arm Hole')}
+                {measurementType === 'kandora' && renderField('Bicep', 'Bicep')}
+                {renderField('Wrist', 'Wrist')}
+                {measurementType === 'kandora' && renderField('Base Width', 'Base Width')}
+                {measurementType === 'kandora' && renderField('Border', 'Border')}
+
+
+            </div>
+
+            <button className="personalize-button" onClick={handlePersonalize}>
+                Add Measurements
+            </button>
         </div>
     );
 };

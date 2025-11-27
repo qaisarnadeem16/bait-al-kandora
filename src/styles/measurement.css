@@ -1,86 +1,234 @@
 /* measurement.css - Styles for the custom measurement UI */
 
-.measurement-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
-  margin: 1rem 0;
+.measurement-container {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  color: #1a1a1a;
 }
 
-.measurement-field {
+.measurement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.measurement-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.measurement-tabs-pill {
+  display: flex;
+  background: #f0f0f0;
+  padding: 4px;
+  border-radius: 100px;
+  gap: 4px;
+}
+
+.pill-tab {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  border-radius: 100px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.pill-tab.active {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.measurement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding-top: 15px;
+}
+
+.measurement-grid-item {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
-.measurement-field label {
+.half-width {
+  padding-top: 15px;
+  width: 100%;
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 1rem;
+}
+
+.dropdown {
+  width: 100%;
+}
+
+.measurement-grid-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.measurement-label {
+  font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 0.25rem;
-  position: relative;
+  color: #444;
+  margin-left: 4px;
 }
 
-.measurement-field label .tooltip {
-  margin-left: 4px;
-  cursor: help;
+.input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.measurement-input,
+.measurement-select {
+  width: 100%;
+  padding: 0.5rem .5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #f9f9f9;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  color: #000;
+}
+
+.measurement-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  cursor: pointer;
+}
+
+.measurement-input:focus,
+.measurement-select:focus {
+  background: #fff;
+  border-color: #000;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.measurement-input::placeholder {
+  color: #aaa;
+}
+
+.measurement-input.error {
+  border-color: #e53935;
+  background: #fff5f5;
+}
+
+.radio-group-inline {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.radio-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
   color: #666;
 }
 
-.measurement-field input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
+.radio-pill input {
+  display: none;
 }
 
-.measurement-field input.error {
-  border-color: #e53935;
-}
-
-.error-message {
-  color: #e53935;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
-
-.custom-size-button {
-  background: transparent;
-  border: 2px solid #0070f3;
-  color: #0070f3;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s, color 0.2s;
-}
-
-.custom-size-button:hover {
-  background: #0070f3;
+.radio-pill.active {
+  background: #000;
   color: #fff;
-}
-
-.size-dropdown {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
+  border-color: #000;
 }
 
 .personalize-button {
-  background: #ff4081;
+  width: 100%;
+  background: #000;
   color: #fff;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
+  padding: 1.25rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-top: 2.5rem;
   cursor: pointer;
-  font-weight: 600;
-  margin-top: 1rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.5px;
 }
 
 .personalize-button:hover {
-  background: #e91e63;
+  background: #222;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 768px) {
-  .measurement-form {
+.personalize-button:active {
+  transform: translateY(0);
+}
+
+.error-text {
+  color: #e53935;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 600px) {
+  .measurement-container {
+    padding: 1.5rem;
+    border-radius: 0;
+    box-shadow: none;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .measurement-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .measurement-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .measurement-tabs-pill {
+    width: 100%;
+  }
+
+  .pill-tab {
+    flex: 1;
+    text-align: center;
   }
 }

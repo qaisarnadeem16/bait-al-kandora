@@ -49,7 +49,7 @@ const DialogOverlay = styled.div`
 
 // Container for the dialog window
 const DialogWindowContainer = styled.div`
-	padding: 20px;
+	// padding: 20px;
 	background-color: white;
 	border-radius: 5px;
 	flex-basis: 600px;
@@ -93,7 +93,7 @@ export const DialogWindow: FunctionComponent<{
 // Content of the dialog
 const DialogContent = styled.div<{ hasTitle?: boolean }>`
 	overflow-y: auto;
-	padding: 4px;
+	// padding: 4px;
 	flex: 1;
 	min-height: 0;
 	max-height: 450px;
@@ -101,7 +101,7 @@ const DialogContent = styled.div<{ hasTitle?: boolean }>`
 `;
 
 // Button for the dialog footer
-export const DialogFooterButton = styled(Button)<{
+export const DialogFooterButton = styled(Button) <{
 	isMobile?: boolean;
 	isFullWidth?: boolean;
 	upperCase?: boolean;
@@ -136,7 +136,7 @@ const DialogFooter = styled.div<{
 
 	${DialogFooterButton} + ${DialogFooterButton} {
 		margin-left: ${(props) =>
-			props.noMarginFooterButton ? '0' : props.marginButtons ? props.marginButtons + 'px' : '20px'};
+		props.noMarginFooterButton ? '0' : props.marginButtons ? props.marginButtons + 'px' : '20px'};
 	}
 `;
 

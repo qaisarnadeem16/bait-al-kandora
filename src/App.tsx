@@ -114,7 +114,7 @@ function App() {
 		return () => window.removeEventListener('resize', resizeFunction);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
+	console.log('product', product);
 	// Tags save from saved compositions
 	useEffect(() => {
 		if (tagsOfSavedDesigns && tagsOfSavedDesigns.length === 0 && draftCompositions && draftCompositions.length > 0) {
@@ -156,7 +156,10 @@ function App() {
 		if (isSceneLoading) setFlagStartLoading(true);
 		if (!isSceneLoading && flagStartLoading) {
 			setTimeout(() => setDelayedLoading(false), 250);
-			showDialog('measurement-modal', <MeasurementModal />);
+			const allowedSkus = ["8814503067897", "8814503100665", "8814502871289", "8814502936825", "8814503231737"];
+			if (product?.sku && allowedSkus.includes(product.sku.toString())) {
+				showDialog('measurement-modal', <MeasurementModal />);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSceneLoading]);

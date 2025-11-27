@@ -216,6 +216,8 @@ const FooterDesktop = () => {
 	// 	}
 	// };
 
+	const allowedSkus = ["8814503067897", "8814503100665", "8814502871289", "8814502936825", "8814503231737"];
+
 	const handleAddToCart = () => {
 		// Check if the product has mandatory personalization data and the value is less than 1
 		if (isMandatoryPD && pdValue < 1) {
@@ -273,7 +275,11 @@ const FooterDesktop = () => {
 									}}
 								/>
 							);
-						else addToCart(measurementData || [], undefined, useLegacyScreenshot);
+						else addToCart(
+							product?.sku && allowedSkus.includes(product.sku.toString()) ? measurementData || [] : [],
+							undefined,
+							useLegacyScreenshot
+						);
 						closeDialog('question');
 					}}
 				/>
@@ -293,16 +299,29 @@ const FooterDesktop = () => {
 					buttonYesLabel={T._('Confirm and Purchase', 'Composer')}
 					onYesClick={(nftForm: NftForm) => {
 						closeDialog('nft');
-						addToCart(measurementData || [], undefined, useLegacyScreenshot, nftForm);
+						addToCart(
+							product?.sku && allowedSkus.includes(product.sku.toString()) ? measurementData || [] : [],
+							undefined,
+							useLegacyScreenshot,
+							nftForm
+						);
 					}}
 					onNoClick={() => {
 						closeDialog('nft');
-						addToCart(measurementData || [], undefined, useLegacyScreenshot);
+						addToCart(
+							product?.sku && allowedSkus.includes(product.sku.toString()) ? measurementData || [] : [],
+							undefined,
+							useLegacyScreenshot
+						);
 					}}
 				/>
 			);
 		else {
-			addToCart(measurementData || [], undefined, useLegacyScreenshot);
+			addToCart(
+				product?.sku && allowedSkus.includes(product.sku.toString()) ? measurementData || [] : [],
+				undefined,
+				useLegacyScreenshot
+			);
 		}
 	};
 

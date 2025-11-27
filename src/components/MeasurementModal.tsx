@@ -4,9 +4,8 @@ import MeasurementForm from './MeasurementForm';
 
 const MeasurementModal = () => {
     return (
-        <Dialog showCloseButton={false}>
+        <Dialog showCloseButton={true}>
             <div style={{ padding: '0px', minWidth: '300px' }}>
-                <p>Enter Measurements</p>
                 <MeasurementForm />
             </div>
         </Dialog>
