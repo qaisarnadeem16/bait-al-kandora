@@ -160,6 +160,25 @@
   gap: 0.5rem;
 }
 
+.input-with-unit {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-unit .measurement-input {
+  padding-right: 2.5rem;
+}
+
+.input-unit {
+  position: absolute;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  color: #999;
+  pointer-events: none;
+  font-weight: 500;
+}
+
 .measurement-input,
 .measurement-select {
   width: 100%;

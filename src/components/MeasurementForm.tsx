@@ -92,11 +92,11 @@ const MeasurementForm: React.FC<MeasurementFormProps> = ({ onFormComplete }) => 
         // Validate all fields (unit is already set to 'cm' by default)
         if (!validate(fields)) return;
 
-        // Append unit to each measurement value
+        // Append unit to each measurement value with space
         const valuesWithUnit: Record<string, string> = {};
         fields.forEach((field) => {
             if (values[field]) {
-                valuesWithUnit[field] = `${values[field]}${unit}`;
+                valuesWithUnit[field] = `${values[field]} ${unit}`;
             }
         });
 
@@ -143,15 +143,18 @@ const MeasurementForm: React.FC<MeasurementFormProps> = ({ onFormComplete }) => 
                         </label>
                     </div>
                 )}
-                <input
-                    type="text"
-                    inputMode="decimal"
-                    pattern="[0-9.]*"
-                    className={`measurement-input ${errors[field] ? 'error' : ''}`}
-                    value={values[field] || ''}
-                    onChange={handleInputChange(field)}
-                    placeholder={unit ? `0.00 ${unit.toUpperCase()}` : '0.00'}
-                />
+                <div className="input-with-unit">
+                    <input
+                        type="text"
+                        inputMode="decimal"
+                        pattern="[0-9.]*"
+                        className={`measurement-input ${errors[field] ? 'error' : ''}`}
+                        value={values[field] || ''}
+                        onChange={handleInputChange(field)}
+                        placeholder="0.00"
+                    />
+                    {unit && <span className="input-unit">{unit}</span>}
+                </div>
                 {errors[field] && <div className="error-text">{errors[field]}</div>}
             </div>
         </div>
