@@ -30,6 +30,8 @@ export const Container = styled.div`
 	}
 `;
 
+
+
 export const Top = styled.div`
 	width: 100%;
 	height: 100%;
