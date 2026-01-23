@@ -7,18 +7,24 @@ type MeasurementType = 'kandora' | 'body';
 type FittingType = 'slim' | 'regular' | 'loose';
 type NeckLengthType = 'A' | 'K';
 type ShoulderLineType = 'regular' | 'sloping' | 'square';
+type UnitType = 'cm' | 'inch';
 
 interface MeasurementValues {
     [key: string]: string;
 }
 
-const MeasurementForm: React.FC = () => {
+interface MeasurementFormProps {
+    onFormComplete?: () => void;
+}
+
+const MeasurementForm: React.FC<MeasurementFormProps> = ({ onFormComplete }) => {
     const [measurementType, setMeasurementType] = useState<MeasurementType>('kandora');
     const [values, setValues] = useState<MeasurementValues>({});
     const [fitting, setFitting] = useState<FittingType>('regular');
     const [neckType, setNeckType] = useState<NeckLengthType>('A');
     const [lengthType, setLengthType] = useState<NeckLengthType>('A');
     const [shoulderLine, setShoulderLine] = useState<ShoulderLineType>('regular');
+    const [unit, setUnit] = useState<UnitType>('cm');
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const { setMeasurementData } = useStore();
@@ -34,6 +40,7 @@ const MeasurementForm: React.FC = () => {
 
     const validate = (fields: string[]): boolean => {
         const newErrors: Record<string, string> = {};
+        
         fields.forEach((field) => {
             if (!values[field]) {
                 newErrors[field] = 'Required';
@@ -74,10 +81,12 @@ const MeasurementForm: React.FC = () => {
 
         const fields = measurementType === 'kandora' ? kandoraFields : bodyFields;
 
+        // Validate all fields (unit is already set to 'cm' by default)
         if (!validate(fields)) return;
 
         const data: Record<string, string> = {
             MeasurementType: measurementType === 'kandora' ? 'Kandora Measurement' : 'Body Measurement',
+            Unit: unit === 'cm' ? 'Centimeters' : 'Inches',
             Fitting: fitting.charAt(0).toUpperCase() + fitting.slice(1) + ' Fit',
             NeckType: neckType === 'A' ? 'Arabic' : 'Kuwaiti',
             LengthType: lengthType === 'A' ? 'Arabic' : 'Kuwaiti',
@@ -86,12 +95,17 @@ const MeasurementForm: React.FC = () => {
         };
 
         setMeasurementData(data);
+        if (onFormComplete) {
+            onFormComplete();
+        }
         closeDialog('measurement-modal');
     };
 
     const renderField = (label: string, field: string, special?: 'neck' | 'length', fullWidth?: boolean) => (
         <div className={`measurement-grid-item ${fullWidth ? 'full-width' : ''}`} key={field}>
-            <label className="measurement-label">{label}</label>
+            <label className="measurement-label required-label">
+                {label} <span className="required-asterisk">*</span>
+            </label>
             <div className="input-wrapper">
                 {(special === 'neck' || special === 'length') && (
                     <div className="radio-group-inline">
@@ -118,7 +132,7 @@ const MeasurementForm: React.FC = () => {
                     className={`measurement-input ${errors[field] ? 'error' : ''}`}
                     value={values[field] || ''}
                     onChange={handleInputChange(field)}
-                    placeholder="0.00 CM"
+                    placeholder={unit ? `0.00 ${unit.toUpperCase()}` : '0.00'}
                 />
                 {errors[field] && <div className="error-text">{errors[field]}</div>}
             </div>
@@ -144,9 +158,45 @@ const MeasurementForm: React.FC = () => {
                     </button>
                 </div>
             </div>
+            
+            {/* Unit Selector - Required Field */}
+            <div className="measurement-header1">
+                <label className="measurement-label required-label">
+                    Unit of Measurement <span className="required-asterisk">*</span>
+                </label>
+                <div className="measurement-tabs-pill">
+                    <button
+                        type="button"
+                        className={`pill-tab ${unit === 'cm' ? 'active' : ''}`}
+                        onClick={() => {
+                            setUnit('cm');
+                            if (errors['unit']) {
+                                setErrors((prev) => ({ ...prev, unit: '' }));
+                            }
+                        }}
+                    >
+                        CM
+                    </button>
+                    <button
+                        type="button"
+                        className={`pill-tab ${unit === 'inch' ? 'active' : ''}`}
+                        onClick={() => {
+                            setUnit('inch');
+                            if (errors['unit']) {
+                                setErrors((prev) => ({ ...prev, unit: '' }));
+                            }
+                        }}
+                    >
+                        Inch
+                    </button>
+                </div>
+                {errors['unit'] && <div className="error-text">{errors['unit']}</div>}
+            </div>
             <div className=" half-width">
                 <div className=" dropdown">
-                    <label className="measurement-label">Fitting Option</label>
+                    <label className="measurement-label required-label">
+                        Fitting Option <span className="required-asterisk">*</span>
+                    </label>
                     <select
                         className="measurement-select"
                         value={fitting}
@@ -159,7 +209,9 @@ const MeasurementForm: React.FC = () => {
                 </div>
 
                 <div className="dropdown">
-                    <label className="measurement-label">Shoulder Down</label>
+                    <label className="measurement-label required-label">
+                        Shoulder Down <span className="required-asterisk">*</span>
+                    </label>
                     <select
                         className="measurement-select"
                         value={shoulderLine}

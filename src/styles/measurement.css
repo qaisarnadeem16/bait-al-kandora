@@ -19,6 +19,68 @@
   border-bottom: 1px solid #eee;
   padding-bottom: 0.5rem;
 }
+.measurement-header1 {
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
+  padding-bottom: 0.5rem;
+}
+.unit-selector-container {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+}
+
+.required-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.required-asterisk {
+  color: #e53935;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.unit-radio-group {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.unit-radio-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+  color: #666;
+}
+
+.unit-radio-pill input {
+  display: none;
+}
+
+.unit-radio-pill.active {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.unit-radio-pill:hover {
+  border-color: #999;
+}
 
 .measurement-header h2 {
   margin: 0;
@@ -30,20 +92,20 @@
 .measurement-tabs-pill {
   display: flex;
   background: #f0f0f0;
-  padding: 4px;
+  padding: 3px;
   border-radius: 100px;
-  gap: 4px;
+  gap: 3px;
 }
 
 .pill-tab {
-  padding: 0.5rem 1.25rem;
+  padding: 0.35rem 0.9rem;
   border: none;
   background: transparent;
   font-weight: 600;
   color: #666;
   cursor: pointer;
   border-radius: 100px;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   transition: all 0.2s ease;
 }
 
