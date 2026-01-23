@@ -32,7 +32,15 @@ const MeasurementForm: React.FC<MeasurementFormProps> = ({ onFormComplete }) => 
 
     const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
-        setValues((prev) => ({ ...prev, [field]: val }));
+        // Allow only numbers and decimal point
+        const numericValue = val.replace(/[^0-9.]/g, '');
+        // Prevent multiple decimal points
+        const parts = numericValue.split('.');
+        const filteredValue = parts.length > 2 
+            ? parts[0] + '.' + parts.slice(1).join('') 
+            : numericValue;
+        
+        setValues((prev) => ({ ...prev, [field]: filteredValue }));
         if (errors[field]) {
             setErrors((prev) => ({ ...prev, [field]: '' }));
         }
@@ -84,6 +92,14 @@ const MeasurementForm: React.FC<MeasurementFormProps> = ({ onFormComplete }) => 
         // Validate all fields (unit is already set to 'cm' by default)
         if (!validate(fields)) return;
 
+        // Append unit to each measurement value
+        const valuesWithUnit: Record<string, string> = {};
+        fields.forEach((field) => {
+            if (values[field]) {
+                valuesWithUnit[field] = `${values[field]}${unit}`;
+            }
+        });
+
         const data: Record<string, string> = {
             MeasurementType: measurementType === 'kandora' ? 'Kandora Measurement' : 'Body Measurement',
             Unit: unit === 'cm' ? 'Centimeters' : 'Inches',
@@ -91,7 +107,7 @@ const MeasurementForm: React.FC<MeasurementFormProps> = ({ onFormComplete }) => 
             NeckType: neckType === 'A' ? 'Arabic' : 'Kuwaiti',
             LengthType: lengthType === 'A' ? 'Arabic' : 'Kuwaiti',
             ShoulderLine: shoulderLine.charAt(0).toUpperCase() + shoulderLine.slice(1),
-            ...values
+            ...valuesWithUnit
         };
 
         setMeasurementData(data);
@@ -129,6 +145,8 @@ const MeasurementForm: React.FC<MeasurementFormProps> = ({ onFormComplete }) => 
                 )}
                 <input
                     type="text"
+                    inputMode="decimal"
+                    pattern="[0-9.]*"
                     className={`measurement-input ${errors[field] ? 'error' : ''}`}
                     value={values[field] || ''}
                     onChange={handleInputChange(field)}
